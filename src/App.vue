@@ -1,17 +1,22 @@
 <template>
   <div id="app">
     <h1>Transkriberis 😎🎤🎚</h1>
-    <AudioPlayer></AudioPlayer>
+    <div class="container">
+      <AudioPlayer></AudioPlayer>
+      <TextEditor></TextEditor>
+    </div>
   </div>
 </template>
 
 <script>
 import AudioPlayer from "./components/AudioPlayer";
+import TextEditor from "./components/TextEditor";
 
 export default {
   name: "App",
   components: {
     AudioPlayer,
+    TextEditor,
   },
 };
 </script>
@@ -37,11 +42,22 @@ button:focus {
   outline: none;
 }
 
+ul,
+ul li {
+  list-style-type: none;
+}
+
 #app {
   font-family: "Montserrat", Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   margin-top: 60px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 </style>
