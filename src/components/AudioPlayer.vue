@@ -1,16 +1,18 @@
 <template>
   <div class="audio-player">
-    <audio id="audioPlayer">
-      <source src="intervas1.wav" type="audio/wav"
-    /></audio>
+    <audio id="audioPlayer" controls>
+      <source id="audioPlayerSource" />
+    </audio>
     <AudioControls></AudioControls>
     <div class="player">
       <!-- <buttonn class="volume"></buttonn> -->
       <div class="main-row">
         <span @click="handlePlayPause" class="audio-btn--clickable play-pause">
-          <PlayIcon></PlayIcon>
+          <PlayIcon v-if="!audio.isPlaying"></PlayIcon>
+          <PauseIcon v-else></PauseIcon>
         </span>
         <div class="progress-bar-container">
+          <h4>{{ audio.name ? audio.name : "Niekas negroja 🙉" }}</h4>
           <span class="progress-bar"> </span>
           <span class="progress-bar--background"> </span>
         </div>
@@ -41,7 +43,7 @@
       </div>
     </div>
 
-    <Playlist></Playlist>
+    <Playlist @mountAudio="handleAudioMount"></Playlist>
   </div>
 </template>
 
@@ -50,6 +52,7 @@ import AudioControls from "./AudioControls";
 import Playlist from "./Playlist";
 import VolumeIcon from "../assets/icons/VolumeIcon";
 import PlayIcon from "../assets/icons/PlayIcon";
+import PauseIcon from "../assets/icons/PauseIcon";
 import RewindIcon from "../assets/icons/RewindIcon";
 import MinusIcon from "../assets/icons/MinusIcon";
 import PlusIcon from "../assets/icons/PlusIcon";
@@ -59,6 +62,7 @@ export default {
     AudioControls,
     VolumeIcon,
     PlayIcon,
+    PauseIcon,
     RewindIcon,
     MinusIcon,
     PlusIcon,
@@ -66,6 +70,13 @@ export default {
   },
   data() {
     return {
+      audio: {
+        isPlaying: false,
+        name: null,
+        src: null,
+      },
+      audioPlayer: null,
+      audioPlayerSource: null,
       isPlaying: false,
       isFileLoaded: false,
       settings: {
@@ -76,20 +87,44 @@ export default {
       },
     };
   },
+  mounted: function() {
+    this.audioPlayer = document.getElementById("audioPlayer");
+    this.audioPlayerSource = document.getElementById("audioPlayerSource");
+  },
+
   methods: {
-    handlePlayPause(event) {
+    handleAudioMount: function(event) {
+      // console.log("audio mount", event.src);
+      // console.log("audio", this.audioPlayer, this.audio);
+
+      // let audioPlayer = document.getElementById("audioPlayer");
+      // let audioPlayerSource = document.getElementById("audioPlayerSource");
+      this.audio.name = event.name;
+      this.audio.src = event.src;
+      this.audioPlayerSource.src = event.src;
+      this.audioPlayer.load();
+    },
+    handlePlayPause: function(event) {
+      event.preventDefault();
+      if (this.audio.isPlaying) {
+        //pause
+        this.audioPlayer.pause();
+      } else {
+        this.audioPlayer.play();
+      }
+
+      this.audio.isPlaying = !this.audio.isPlaying;
+    },
+    handleVolumeClick: function(event) {
       event.preventDefault();
     },
-    handleVolumeClick(event) {
+    handleRewind: function(event) {
       event.preventDefault();
     },
-    handleRewind(event) {
+    handleForward: function(event) {
       event.preventDefault();
     },
-    handleForward(event) {
-      event.preventDefault();
-    },
-    handlePlaybackSpeed(event) {
+    handlePlaybackSpeed: function(event) {
       event.preventDefault();
     },
   },
@@ -101,7 +136,7 @@ export default {
   flex-direction: column;
   margin: 0 auto;
 
-  width: 90%;
+  width: 100%;
   border-radius: 4px;
   background: linear-gradient(145deg, #f8f8f8, #d1d1d1);
   box-shadow: 5px 5px 8px #a2a2a2, -5px -5px 8px #ffffff;
@@ -113,7 +148,8 @@ export default {
   }
 
   .progress-bar-container {
-    display: block;
+    display: flex;
+    align-items: center;
     position: relative;
     width: 75%;
     height: 26px;
@@ -121,11 +157,11 @@ export default {
 
     .progress-bar {
       position: absolute;
-      top: 0;
+      top: 1.75em;
       left: 0;
       margin: auto auto;
-      width: 100px;
-      height: 26px;
+      width: 0px;
+      height: 8px;
       z-index: 2;
       background: #006b5a;
       // transition: width 0.1s linear;
@@ -133,10 +169,10 @@ export default {
 
       &--background {
         position: absolute;
-        top: 0;
+        top: 1.75em;
         left: 0;
         width: 100%;
-        height: 26px;
+        height: 8px;
         z-index: 1;
         background: #006b5a55;
       }

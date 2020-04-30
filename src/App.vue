@@ -45,6 +45,11 @@ button:focus {
 ul,
 ul li {
   list-style-type: none;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0px;
 }
 
 #app {
@@ -56,6 +61,7 @@ ul li {
 }
 
 .container {
+  margin-top: 3em;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
