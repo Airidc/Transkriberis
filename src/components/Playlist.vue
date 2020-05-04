@@ -1,13 +1,13 @@
 <template>
   <div class="playlist">
     <div class="top">
-      <h2>Playlist</h2>
+      <h2>{{ !isPlaylistView ? "Failų įkėlimas" : "Grojaraštis" }}</h2>
       <span
         @click="handleViewClick"
         class="audio-btn--clickable"
         style="height: 40px; margin-left: 2.5em;"
       >
-        {{ isPlaylistView ? "Upload files" : "Show playlist" }}
+        {{ isPlaylistView ? "Įkelti failus" : "Rodyti grojaraštį" }}
       </span>
       <span class="audio-btn--clickable settings-btn">
         <GearIcon></GearIcon
