@@ -11,6 +11,7 @@
           <PauseIcon v-else></PauseIcon>
         </span>
         <div class="progress-bar-container">
+          <h4 v-if="audio.src" class="time">{{ currentPlayTime }}</h4>
           <h4>{{ audio.name ? audio.name : "Niekas negroja 🙉" }}</h4>
           <div @click="handleProgressbarClick" class="progres-bar--wrapper">
             <span class="progress-bar" id="progress-bar"> </span>
@@ -54,7 +55,9 @@
           <span class="btn-text">
             Greitis
           </span>
-          <span class="btn-text">x{{ audio.playbackSpeed }}</span>
+          <span class="btn-text"
+            >x{{ parseFloat(audio.playbackSpeed).toFixed(2) }}</span
+          >
           <!--  -->
           <span @click="handlePlaybackSpeed(true)">
             <PlusIcon class="inner-btn"></PlusIcon>
@@ -95,7 +98,9 @@ export default {
       audio: {
         isPlaying: false,
         isMuted: false,
-        playbackSpeed: 1,
+        playbackSpeed: 1.0,
+        duration: undefined,
+        currentTime: null,
         name: null,
         src: null,
       },
@@ -108,10 +113,24 @@ export default {
       isFileLoaded: false,
     };
   },
+  computed: {
+    currentPlayTime: function() {
+      if (!this.audio.duration || !this.audio.currentTime) {
+        return "--:--:--";
+      }
+
+      return (
+        this.convertSeconds(this.audio.currentTime) +
+        " / " +
+        this.convertSeconds(this.audio.duration)
+      );
+    },
+  },
   mounted: function() {
     this.audioPlayer = document.getElementById("audioPlayer");
     this.audioPlayerSource = document.getElementById("audioPlayerSource");
     this.progressBarElement = document.querySelector("#progress-bar");
+    this.audioPlayer.addEventListener("canplaythrough", this.addPlayTimeValues);
     this.progressBarWidth = parseInt(
       window
         .getComputedStyle(document.querySelector(".progress-bar--background"))
@@ -120,7 +139,20 @@ export default {
     );
   },
   methods: {
+    addPlayTimeValues: function(event) {
+      console.log(parseInt(event.target.duration));
+      this.audio.duration = parseInt(event.target.duration);
+      this.audio.currentTime = parseInt(event.target.currentTime);
+    },
     handleAudioMount: function(event) {
+      this.audio.isPlaying = false;
+      this.audio.playbackSpeed = 1;
+      this.audio.duration = undefined;
+      this.audio.currentTime = null;
+      this.audio.name = null;
+      this.audio.src = null;
+      this.progressBarElement.style.width = "0px";
+
       this.audio.name = event.name;
       this.audio.src = event.src;
       this.audioPlayerSource.src = event.src;
@@ -128,10 +160,11 @@ export default {
     },
     handleTimeUpdate: function(event) {
       // console.log(event);
-      let duration = event.target.duration;
-      let currentTime = event.target.currentTime;
+      this.audio.duration = parseInt(event.target.duration);
+      this.audio.currentTime = parseInt(event.target.currentTime);
 
-      this.progressBarElement.style.width = `${(currentTime / duration) *
+      this.progressBarElement.style.width = `${(this.audio.currentTime /
+        this.audio.duration) *
         100}%`;
     },
     handlePlayPause: function() {
@@ -149,7 +182,6 @@ export default {
       this.audio.isPlaying = !this.audio.isPlaying;
     },
     handleProgressbarClick: function(event) {
-      // console.log("clicking!!!", event);
       if (!this.audio.src) {
         return;
       }
@@ -210,11 +242,31 @@ export default {
 
       this.audioPlayer.playbackRate = this.audio.playbackSpeed;
     },
+    convertSeconds: function(seconds) {
+      let hours = Math.floor(seconds / 3600);
+      hours >= 1 ? (seconds = seconds - hours * 3600) : (hours = 0);
+
+      let minutes = Math.floor(seconds / 60);
+      minutes >= 1 ? (seconds = seconds - minutes * 60) : (minutes = 0);
+
+      hours.toString().length == 1 ? (hours = "0" + hours) : void 0;
+      minutes.toString().length == 1 ? (minutes = "0" + minutes) : void 0;
+      seconds.toString().length == 1 ? (seconds = "0" + seconds) : void 0;
+
+      return `${hours === 0 ? "" : hours + ":"}${
+        minutes === 0 ? "00:" : minutes + ":"
+      }${seconds}`;
+    },
   },
 };
 </script>
 <style lang="scss">
 @import "@/assets/style/slider.scss";
+
+.time {
+  margin-right: 1em;
+  width: 33%;
+}
 
 .volume-controls {
   position: relative;
@@ -294,13 +346,14 @@ export default {
 
 .audio-btn {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 
   margin: 0.5em;
   padding: 0 0.5em;
 
   min-width: 36px;
+  width: 200px;
   min-height: 46px;
   border-radius: 5px;
   background: #e8e8e8;
@@ -336,6 +389,10 @@ export default {
     &:hover {
       box-shadow: inset 7px 7px 10px #bcbcbc, inset -7px -7px 10px #ffffff;
     }
+  }
+
+  .btn-text {
+    width: 25%;
   }
 
   svg {

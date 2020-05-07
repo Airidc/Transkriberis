@@ -57,11 +57,11 @@ ul li {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  margin-top: 60px;
+  margin-top: 1em;
 }
 
 .container {
-  margin-top: 3em;
+  margin: 2em auto;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;

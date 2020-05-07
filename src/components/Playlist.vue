@@ -13,7 +13,7 @@
         <GearIcon></GearIcon
       ></span>
     </div>
-    <ul v-if="isPlaylistView" class="file-list">
+    <ul v-show="isPlaylistView" class="file-list">
       <li
         class="file-list--item"
         @mouseenter="handleMouseEnter"
@@ -28,16 +28,29 @@
       </li>
     </ul>
     <div
-      v-else
+      v-show="!isPlaylistView"
       class="drop-zone"
       @dragenter="handleDragEnter"
       @dragover="handleDragOver"
       @drop="handleDrop"
       @dragleave="handleDragLeave"
+      @click="imitateClickUpload"
     >
-      <h4>Drop the 🎵 files here!</h4>
+      <h4>Garso įrašus 🎵 nutempti čia!</h4>
       <UploadIcon></UploadIcon>
+      <h4
+        >Arba paspauk betkur šioje dėžutėję, kad atidarytum failų įkėlimo
+        langą</h4
+      >
     </div>
+    <input
+      type="file"
+      name="uploadFiles"
+      id="upload-files"
+      @change="handleDrop"
+      style="display: none;"
+      multiple
+    />
   </div>
 </template>
 
@@ -59,6 +72,12 @@ export default {
     };
   },
   methods: {
+    imitateClickUpload() {
+      document.querySelector("#upload-files").click();
+    },
+    handleFileChange(event) {
+      console.log(event);
+    },
     handleMouseEnter(event) {
       event.preventDefault();
       let icon = event.target.querySelector("svg");
@@ -113,7 +132,7 @@ export default {
     },
     handleDrop(event) {
       event.preventDefault();
-      if (event.dataTransfer.items) {
+      if (event.dataTransfer && event.dataTransfer.items) {
         // Use DataTransferItemList interface to access the file(s)
         for (let i = 0; i < event.dataTransfer.items.length; i++) {
           // If dropped items aren't files, reject them
@@ -128,8 +147,8 @@ export default {
         }
       } else {
         // Use DataTransfer interface to access the file(s)
-        for (let i = 0; i < event.dataTransfer.files.length; i++) {
-          let file = event.dataTransfer.files[i];
+        for (let i = 0; i < event.target.files.length; i++) {
+          let file = event.target.files[i];
           this.audioSources.push({
             src: URL.createObjectURL(file),
             name: file.name,
@@ -175,7 +194,8 @@ export default {
   height: 85%;
   min-width: 100px;
   min-height: 200px;
-  margin: 2em auto;
+  margin: 1em auto;
+  padding: 1em;
 
   border-radius: 5px;
   box-shadow: inset 7px 7px 10px #bcbcbc, inset -7px -7px 10px #ffffff;
