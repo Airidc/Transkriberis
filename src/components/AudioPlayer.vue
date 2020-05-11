@@ -48,17 +48,15 @@
           <RewindIcon></RewindIcon>
         </span>
         <span class="audio-btn">
-          <!--  -->
           <span @click="handlePlaybackSpeed(false)">
             <MinusIcon class="flip inner-btn"></MinusIcon>
           </span>
           <span class="btn-text">
             Greitis
           </span>
-          <span class="btn-text"
-            >x{{ parseFloat(audio.playbackSpeed).toFixed(2) }}</span
-          >
-          <!--  -->
+          <span class="btn-text">
+            x{{ parseFloat(audio.playbackSpeed).toFixed(2) }}
+          </span>
           <span @click="handlePlaybackSpeed(true)">
             <PlusIcon class="inner-btn"></PlusIcon>
           </span>
@@ -126,7 +124,7 @@ export default {
       );
     },
   },
-  mounted: function() {
+  mounted() {
     this.audioPlayer = document.getElementById("audioPlayer");
     this.audioPlayerSource = document.getElementById("audioPlayerSource");
     this.progressBarElement = document.querySelector("#progress-bar");
@@ -137,10 +135,11 @@ export default {
         .getPropertyValue("width")
         .replace("px", "")
     );
+    document.addEventListener("keyup", this.handleKeyUp);
   },
   methods: {
     addPlayTimeValues: function(event) {
-      console.log(parseInt(event.target.duration));
+      // console.log(parseInt(event.target.duration));
       this.audio.duration = parseInt(event.target.duration);
       this.audio.currentTime = parseInt(event.target.currentTime);
     },
@@ -206,12 +205,12 @@ export default {
       this.audioPlayer.volume = event.target.value;
     },
     handleRewind: function(forward) {
-      console.log(
-        "REWIND:",
-        forward,
-        this.audioPlayer.duration - this.audioPlayer.currentTime,
-        this.audioPlayer.currentTime
-      );
+      // console.log(
+      //   "REWIND:",
+      //   forward,
+      //   this.audioPlayer.duration - this.audioPlayer.currentTime,
+      //   this.audioPlayer.currentTime
+      // );
       if (!this.audio.src) {
         // || this.audioPlayer.currentTime < 3000) {
         return;
@@ -227,12 +226,12 @@ export default {
       }
     },
     handlePlaybackSpeed: function(increased) {
-      console.log("playback", increased);
+      // console.log("playback", increased);
       if (
         (increased && this.audio.playbackSpeed === 3) ||
         (!increased && this.audio.playbackSpeed === 0)
       ) {
-        console.log("returning");
+        // console.log("returning");
         return;
       }
 
@@ -241,6 +240,13 @@ export default {
         : this.audio.playbackSpeed - 0.25;
 
       this.audioPlayer.playbackRate = this.audio.playbackSpeed;
+    },
+    handleKeyUp: function(event) {
+      // console.log(event);
+
+      if (event.code === "Escape") {
+        this.handlePlayPause();
+      }
     },
     convertSeconds: function(seconds) {
       let hours = Math.floor(seconds / 3600);

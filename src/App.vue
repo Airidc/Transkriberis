@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>Transkriberis 😎🎤🎚</h1>
+    <h1><span class="label">BETA</span> Transkriberis 😎🎤🎚</h1>
     <div class="container">
       <AudioPlayer></AudioPlayer>
       <TextEditor></TextEditor>
@@ -40,6 +40,14 @@ select:focus,
 textarea:focus,
 button:focus {
   outline: none;
+}
+
+.label {
+  vertical-align: super;
+  border: 2px solid #abcd12;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  padding: 0.3em;
 }
 
 ul,
