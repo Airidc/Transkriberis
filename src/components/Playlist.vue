@@ -9,9 +9,9 @@
       >
         {{ isPlaylistView ? "Įkelti failus" : "Rodyti grojaraštį" }}
       </span>
-      <span class="audio-btn--clickable settings-btn">
-        <GearIcon></GearIcon
-      ></span>
+      <span @click="openSettings" class="audio-btn--clickable settings-btn">
+        <GearIcon></GearIcon>
+      </span>
     </div>
     <ul v-show="isPlaylistView" class="file-list">
       <li
@@ -72,6 +72,9 @@ export default {
     };
   },
   methods: {
+    openSettings() {
+      this.$store.commit("openModal");
+    },
     imitateClickUpload() {
       document.querySelector("#upload-files").click();
     },

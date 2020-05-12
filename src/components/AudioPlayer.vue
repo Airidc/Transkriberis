@@ -123,6 +123,9 @@ export default {
         this.convertSeconds(this.audio.duration)
       );
     },
+    isModalOpen: function() {
+      return this.$store.state.isModalOpen;
+    },
   },
   mounted() {
     this.audioPlayer = document.getElementById("audioPlayer");
@@ -242,7 +245,11 @@ export default {
       this.audioPlayer.playbackRate = this.audio.playbackSpeed;
     },
     handleKeyUp: function(event) {
-      // console.log(event);
+      if (this.isModalOpen) {
+        console.log("returning");
+        return;
+      }
+      console.log(event);
 
       if (event.code === "Escape") {
         this.handlePlayPause();

@@ -4,6 +4,7 @@
     <div class="container">
       <AudioPlayer></AudioPlayer>
       <TextEditor></TextEditor>
+      <Settings></Settings>
     </div>
   </div>
 </template>
@@ -11,12 +12,24 @@
 <script>
 import AudioPlayer from "./components/AudioPlayer";
 import TextEditor from "./components/TextEditor";
+import Settings from "./components/Settings";
 
 export default {
   name: "App",
   components: {
     AudioPlayer,
     TextEditor,
+    Settings,
+  },
+  data() {
+    return {
+      isModalOpen: false,
+    };
+  },
+  methods: {
+    handleModalOpen: function(modalValue) {
+      this.isModalOpen = modalValue;
+    },
   },
 };
 </script>
