@@ -6,67 +6,116 @@
         <h3>Greitųjų mygtukų nustatymai</h3>
         <div class="input-group">
           <h4>Paleisti/Sustabdyti</h4>
-          <!-- <span @click="getInput(settings.keyBindings.playPause, $event)">
-            {{ settings.keyBindings.playPause }}
+          <!-- <span @click="getInput('playPause', $event)">
+            {{ this.settings.keyBindings.playPause }}
           </span> -->
           <input
-            @click="getInputInput"
+            ref="playPause"
             type="text"
-            name="playPause"
-            v-model="settings.keyBindings.playPause"
+            v-bind:data-property="'keyBindings.playPause'"
+            @click="getInput($refs['playPause'], $event)"
+            style="/*display: none;*/"
+            :value.prop="settings.keyBindings.playPause"
           />
         </div>
         <div class="input-group">
           <h4>Atsukti atgal</h4>
-          <span @click="getInput(settings.keyBindings.rewind, $event)">
+          <!-- <span @click="getInput(settings.keyBindings.rewind, $event)">
             {{ settings.keyBindings.rewind }}
-          </span>
+          </span> -->
+          <input
+            ref="rewind"
+            type="text"
+            v-bind:data-property="'keyBindings.rewind'"
+            @click="getInput($refs['rewind'], $event)"
+            style="/*display: none;*/"
+            v-model="settings.keyBindings.rewind"
+          />
         </div>
         <div class="input-group">
           <h4>Pasukti į priekį</h4>
-          <span @click="getInput(settings.keyBindings.forward, $event)">
+          <!-- <span @click="getInput(settings.keyBindings.forward, $event)">
             {{ settings.keyBindings.forward }}
-          </span>
+          </span> -->
+          <input
+            ref="forward"
+            type="text"
+            v-bind:data-property="'keyBindings.forward'"
+            @click="getInput($refs['forward'], $event)"
+            style="/*display: none;*/"
+            v-model="settings.keyBindings.forward"
+          />
         </div>
         <div class="input-group">
           <h4>Greitis +</h4>
-          <span
+          <!-- <span
             @click="
               getInput(settings.keyBindings.playbackSpeedIncrease, $event)
             "
           >
             {{ settings.keyBindings.playbackSpeedIncrease }}
-          </span>
+          </span> -->
+          <input
+            ref="playbackSpeedIncrease"
+            type="text"
+            v-bind:data-property="'keyBindings.playbackSpeedIncrease'"
+            @click="getInput($refs['playbackSpeedIncrease'], $event)"
+            style="/*display: none;*/"
+            v-model="settings.keyBindings.playbackSpeedIncrease"
+          />
         </div>
         <div class="input-group">
           <h4>Greitis -</h4>
-          <span
+          <!-- <span
             @click="
               getInput(settings.keyBindings.playbackSpeedDecrease, $event)
             "
           >
             {{ settings.keyBindings.playbackSpeedDecrease }}
-          </span>
+          </span> -->
+          <input
+            ref="playbackSpeedDecrease"
+            type="text"
+            v-bind:data-property="'keyBindings.playbackSpeedDecrease'"
+            @click="getInput($refs['playbackSpeedDecrease'], $event)"
+            style="/*display: none;*/"
+            v-model="settings.keyBindings.playbackSpeedDecrease"
+          />
         </div>
       </div>
       <div class="settings-section">
         <h3>Grotuvo valdymo pasirinktys</h3>
         <div class="input-group">
           <h4>Persukimo kiekis (sekundės)</h4>
-          <span @click="getInput(settings.options.rewindSeconds, $event)">
+          <!-- <span @click="getInput(settings.options.rewindSeconds, $event)">
             {{ settings.options.rewindSeconds }}
-          </span>
+          </span> -->
+          <input
+            ref="rewindSeconds"
+            type="text"
+            v-bind:data-property="'options.rewindSeconds'"
+            @click="getInput($refs['rewindSeconds'], $event)"
+            style="/*display: none;*/"
+            v-model="settings.options.rewindSeconds"
+          />.
         </div>
         <div class="input-group">
           <h4>Pagreitinimas / sulėtinimas (žingsnis)</h4>
-          <span @click="getInput(settings.options.playbackSpeedStep, $event)">
-            {{ settings.options.playbackSpeedStep }}
-          </span>
+          <input
+            ref="optionPlayBackSpeedStep"
+            @click="getInput('optionPlayBackSpeedStep', $event)"
+            v-model="settings.options.playbackSpeedStep"
+          />
+          <!-- {{ settings.options.playbackSpeedStep }}
+          </span> -->
         </div>
         <div class="input-group">
           <h4>Atsukti laiką paleidžiant po pauzės?</h4>
           <input
             type="checkbox"
+            ref="rewindAfterPause"
+            v-bind:data-property="'options.rewindAfterPause'"
+            @click="getInput('rewindAfterPause', $event)"
             name="rewindAfterPause"
             v-model="settings.options.rewindAfterPause"
           />
@@ -75,7 +124,9 @@
           <h4>Atsukti sekundžių po pauzės</h4>
           <input
             type="number"
-            name="rewindAfterPauseSeconds"
+            ref="rewindAfterPauseSeconds"
+            v-bind:data-property="'options.rewindAfterPauseSeconds'"
+            @click="getInput('rewindAfterPauseSeconds', $event)"
             min="0"
             step="1"
             v-model="settings.options.rewindAfterPauseSeconds"
@@ -87,24 +138,10 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      settings: {
-        keyBindings: {
-          playPause: "Nera knopkės 🤷‍♂️🤷‍♀️",
-          rewind: "Nera knopkės 🤷‍♂️🤷‍♀️",
-          forward: "Nera knopkės 🤷‍♂️🤷‍♀️",
-          playbackSpeedIncrease: "Nera knopkės 🤷‍♂️🤷‍♀️",
-          playbackSpeedDecrease: "Nera knopkės 🤷‍♂️🤷‍♀️",
-        },
-        options: {
-          rewindSeconds: 0,
-          playbackSpeedStep: 0.25,
-          rewindAfterPause: true,
-          rewindAfterPauseSeconds: 0,
-        },
-      },
       isListeningForInput: false,
     };
   },
@@ -112,32 +149,44 @@ export default {
     isModalOpen: function() {
       return this.$store.state.isModalOpen;
     },
+    settings: function() {
+      return this.$store.state.settings;
+    },
   },
   mounted() {
     // if() - localstorage, then load if not define default
-    // document.addEventListener("keypress", this.registerInput);
+    document.addEventListener("keyup", this.registerInput);
   },
   methods: {
+    ...mapActions(["test"]),
     closeModal: function() {
       this.$store.commit("closeModal");
     },
     registerInput: function(event) {
       if (!this.isListeningForInput) return;
-      console.log("registered:", event);
-      this.propertyListening = event.code;
-      this.isListeningForInput = false;
-    },
-    getInputInput: function(event) {
-      console.log("INPUT", event);
-      event.target.addEventListener("keyup", function(ev) {
-        event.value = ev.code;
+      console.log("registered:", event.code, event);
+      this.refListening.value = event.code;
+      let splitProperty = this.refListening
+        .getAttribute("data-property")
+        .split(".");
+      let branch = splitProperty[0];
+      let leaf = splitProperty[1];
+
+      this.test({
+        branch,
+        leaf,
+        value: event.code,
       });
+
+      // clear leftovers
+      this.isListeningForInput = false;
+      this.refListening = null;
     },
-    getInput: function(settingsField, event) {
+    getInput: function(ref, event) {
       // event.preventDefault();
-      console.log(settingsField, event);
+      console.log(ref, event);
       this.isListeningForInput = true;
-      this.propertyListening = settingsField;
+      this.refListening = ref;
     },
   },
 };
