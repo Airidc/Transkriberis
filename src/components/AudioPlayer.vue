@@ -41,10 +41,14 @@
         </span>
         <span @click="handleRewind(false)" class="audio-btn--clickable">
           <RewindIcon class="flip"></RewindIcon>
-          <span class="btn-text">Atgal 3sek.</span>
+          <span class="btn-text">
+            Atgal {{ this.settings.options.rewindSeconds }}sek.
+          </span>
         </span>
         <span @click="handleRewind(true)" class="audio-btn--clickable">
-          <span class="btn-text">Pirmyn 3sek.</span>
+          <span class="btn-text">
+            Pirmyn {{ this.settings.options.rewindSeconds }}sek.
+          </span>
           <RewindIcon></RewindIcon>
         </span>
         <span class="audio-btn">
@@ -126,6 +130,9 @@ export default {
     isModalOpen: function() {
       return this.$store.state.isModalOpen;
     },
+    settings: function() {
+      return this.$store.state.settings;
+    },
   },
   mounted() {
     this.audioPlayer = document.getElementById("audioPlayer");
@@ -178,6 +185,7 @@ export default {
         //pause
         this.audioPlayer.pause();
       } else {
+        if (this.settings.options.rewindAfterPause) this.handleRewind();
         this.audioPlayer.play();
       }
 
@@ -207,52 +215,91 @@ export default {
 
       this.audioPlayer.volume = event.target.value;
     },
-    handleRewind: function(forward) {
-      // console.log(
-      //   "REWIND:",
-      //   forward,
-      //   this.audioPlayer.duration - this.audioPlayer.currentTime,
-      //   this.audioPlayer.currentTime
-      // );
+    handleRewind: function(isForward, amount = null) {
       if (!this.audio.src) {
-        // || this.audioPlayer.currentTime < 3000) {
         return;
       }
 
+      if (!amount) {
+        amount = parseFloat(this.settings.options.rewindSeconds);
+      }
+
+      console.log("amount", amount);
+
       if (
-        forward &&
-        this.audioPlayer.duration - this.audioPlayer.currentTime >= 3
+        isForward &&
+        this.audioPlayer.duration - this.audioPlayer.currentTime >= amount
       ) {
-        this.audioPlayer.currentTime = this.audioPlayer.currentTime + 3;
-      } else if (!forward && this.audioPlayer.currentTime >= 3) {
-        this.audioPlayer.currentTime = this.audioPlayer.currentTime - 3;
+        this.audioPlayer.currentTime = this.audioPlayer.currentTime + amount;
+      } else if (!isForward && this.audioPlayer.currentTime >= amount) {
+        this.audioPlayer.currentTime = this.audioPlayer.currentTime - amount;
       }
     },
-    handlePlaybackSpeed: function(increased) {
-      // console.log("playback", increased);
+    handlePlaybackSpeed: function(isIncreased) {
+      // console.log("playback", isIncreased);
+      let speedStep = parseFloat(this.settings.options.playbackSpeedStep);
       if (
-        (increased && this.audio.playbackSpeed === 3) ||
-        (!increased && this.audio.playbackSpeed === 0)
+        (isIncreased &&
+          (this.audio.playbackSpeed === 3 ||
+            this.audio.playbackSpeed + speedStep >= 3.01)) ||
+        (!isIncreased &&
+          (this.audio.playbackSpeed === 0 ||
+            this.audio.playbackSpeed - speedStep <= 0.01))
       ) {
-        // console.log("returning");
+        console.log("returning");
         return;
       }
 
-      this.audio.playbackSpeed = increased
-        ? this.audio.playbackSpeed + 0.25
-        : this.audio.playbackSpeed - 0.25;
+      this.audio.playbackSpeed = isIncreased
+        ? this.audio.playbackSpeed + parseFloat(speedStep)
+        : this.audio.playbackSpeed - speedStep;
 
+      console.log(
+        "this.audio.playbackSpeed :>> ",
+        this.audio.playbackSpeed,
+        "||",
+        speedStep
+      );
       this.audioPlayer.playbackRate = this.audio.playbackSpeed;
     },
     handleKeyUp: function(event) {
       if (this.isModalOpen) {
-        console.log("returning");
         return;
       }
-      console.log(event);
 
-      if (event.code === "Escape") {
+      if (
+        this.settings.keyBindings.playPause &&
+        event.code === this.settings.keyBindings.playPause
+      ) {
         this.handlePlayPause();
+      }
+
+      if (
+        this.settings.keyBindings.rewind &&
+        event.code === this.settings.keyBindings.rewind
+      ) {
+        this.handleRewind(false);
+      }
+
+      if (
+        this.settings.keyBindings.forward &&
+        event.code === this.settings.keyBindings.forward
+      ) {
+        this.handleRewind(true);
+      }
+
+      if (
+        this.settings.keyBindings.playbackSpeedIncrease &&
+        event.code === this.settings.keyBindings.playbackSpeedIncrease
+      ) {
+        this.handlePlaybackSpeed(true);
+      }
+
+      if (
+        this.settings.keyBindings.playbackSpeedDecrease &&
+        event.code === this.settings.keyBindings.playbackSpeedDecrease
+      ) {
+        this.handlePlaybackSpeed(false);
       }
     },
     convertSeconds: function(seconds) {

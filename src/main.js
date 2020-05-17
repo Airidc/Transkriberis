@@ -13,14 +13,14 @@ const store = new Vuex.Store({
     isModalOpen: false,
     settings: {
       keyBindings: {
-        playPause: "Nera knopkės 🤷‍♂️🤷‍♀️",
-        rewind: "Nera knopkės 🤷‍♂️🤷‍♀️",
-        forward: "Nera knopkės 🤷‍♂️🤷‍♀️",
-        playbackSpeedIncrease: "Nera knopkės 🤷‍♂️🤷‍♀️",
-        playbackSpeedDecrease: "Nera knopkės 🤷‍♂️🤷‍♀️",
+        playPause: null,
+        rewind: null,
+        forward: null,
+        playbackSpeedIncrease: null,
+        playbackSpeedDecrease: null,
       },
       options: {
-        rewindSeconds: 0,
+        rewindSeconds: 1,
         playbackSpeedStep: 0.25,
         rewindAfterPause: true,
         rewindAfterPauseSeconds: 0,
@@ -67,7 +67,7 @@ const store = new Vuex.Store({
       } else {
         switch (data.leaf) {
           case "rewindSeconds":
-            state.settings.options.rewindSeconds = data.value;
+            state.settings.options.rewindSeconds = parseFloat(data.value);
             break;
 
           case "playbackSpeedStep":
@@ -79,7 +79,9 @@ const store = new Vuex.Store({
             break;
 
           case "rewindAfterPauseSeconds":
-            state.settings.options.rewindAfterPauseSeconds = data.value;
+            state.settings.options.rewindAfterPauseSeconds = parseFloat(
+              data.value
+            );
             break;
 
           default:

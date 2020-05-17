@@ -12,10 +12,11 @@
           <input
             ref="playPause"
             type="text"
+            readonly
             v-bind:data-property="'keyBindings.playPause'"
             @click="getInput($refs['playPause'], $event)"
             style="/*display: none;*/"
-            :value.prop="settings.keyBindings.playPause"
+            :value.prop="settings.keyBindings.playPause || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
@@ -26,10 +27,11 @@
           <input
             ref="rewind"
             type="text"
+            readonly
             v-bind:data-property="'keyBindings.rewind'"
             @click="getInput($refs['rewind'], $event)"
             style="/*display: none;*/"
-            v-model="settings.keyBindings.rewind"
+            :value.prop="settings.keyBindings.rewind || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
@@ -40,10 +42,11 @@
           <input
             ref="forward"
             type="text"
+            readonly
             v-bind:data-property="'keyBindings.forward'"
             @click="getInput($refs['forward'], $event)"
             style="/*display: none;*/"
-            v-model="settings.keyBindings.forward"
+            :value.prop="settings.keyBindings.forward || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
@@ -58,10 +61,13 @@
           <input
             ref="playbackSpeedIncrease"
             type="text"
+            readonly
             v-bind:data-property="'keyBindings.playbackSpeedIncrease'"
             @click="getInput($refs['playbackSpeedIncrease'], $event)"
             style="/*display: none;*/"
-            v-model="settings.keyBindings.playbackSpeedIncrease"
+            :value.prop="
+              settings.keyBindings.playbackSpeedIncrease || 'Nera knopkės 🤷‍♂️🤷‍♀️'
+            "
           />
         </div>
         <div class="input-group">
@@ -76,10 +82,13 @@
           <input
             ref="playbackSpeedDecrease"
             type="text"
+            readonly
             v-bind:data-property="'keyBindings.playbackSpeedDecrease'"
             @click="getInput($refs['playbackSpeedDecrease'], $event)"
             style="/*display: none;*/"
-            v-model="settings.keyBindings.playbackSpeedDecrease"
+            :value.prop="
+              settings.keyBindings.playbackSpeedDecrease || 'Nera knopkės 🤷‍♂️🤷‍♀️'
+            "
           />
         </div>
       </div>
@@ -97,14 +106,14 @@
             @input="setValue($refs['rewindSeconds'], $event)"
             style="/*display: none;*/"
             v-model="settings.options.rewindSeconds"
-          />.
+          />
         </div>
         <div class="input-group">
           <h4>Pagreitinimas / sulėtinimas (žingsnis)</h4>
           <input
-            ref="playBackSpeedStep"
-            v-bind:data-property="'options.playBackSpeedStep'"
-            @input="setValue($refs['playBackSpeedStep'], $event)"
+            ref="playbackSpeedStep"
+            v-bind:data-property="'options.playbackSpeedStep'"
+            @input="setValue($refs['playbackSpeedStep'], $event)"
             v-model="settings.options.playbackSpeedStep"
           />
           <!-- {{ settings.options.playbackSpeedStep }}
@@ -118,7 +127,7 @@
             v-bind:data-property="'options.rewindAfterPause'"
             @input="setValue($refs['rewindAfterPause'], $event)"
             name="rewindAfterPause"
-            v-model="settings.options.rewindAfterPause"
+            :checked="settings.options.rewindAfterPause"
           />
         </div>
         <div class="input-group">
@@ -166,11 +175,15 @@ export default {
     setValue: function(ref, event) {
       console.log(ref, event);
       let { branch, leaf } = this.getBranchAndLeaf(ref);
+      let value =
+        event.target.type === "checkbox"
+          ? event.target.checked
+          : event.target.value;
 
       this.updateSettings({
         branch,
         leaf,
-        value: event.target.value,
+        value: value,
       });
     },
     registerInput: function(event) {
