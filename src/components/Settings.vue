@@ -92,9 +92,9 @@
           </span> -->
           <input
             ref="rewindSeconds"
-            type="text"
+            type="number"
             v-bind:data-property="'options.rewindSeconds'"
-            @click="getInput($refs['rewindSeconds'], $event)"
+            @input="setValue($refs['rewindSeconds'], $event)"
             style="/*display: none;*/"
             v-model="settings.options.rewindSeconds"
           />.
@@ -102,8 +102,9 @@
         <div class="input-group">
           <h4>Pagreitinimas / sulėtinimas (žingsnis)</h4>
           <input
-            ref="optionPlayBackSpeedStep"
-            @click="getInput('optionPlayBackSpeedStep', $event)"
+            ref="playBackSpeedStep"
+            v-bind:data-property="'options.playBackSpeedStep'"
+            @input="setValue($refs['playBackSpeedStep'], $event)"
             v-model="settings.options.playbackSpeedStep"
           />
           <!-- {{ settings.options.playbackSpeedStep }}
@@ -115,7 +116,7 @@
             type="checkbox"
             ref="rewindAfterPause"
             v-bind:data-property="'options.rewindAfterPause'"
-            @click="getInput('rewindAfterPause', $event)"
+            @input="setValue($refs['rewindAfterPause'], $event)"
             name="rewindAfterPause"
             v-model="settings.options.rewindAfterPause"
           />
@@ -126,7 +127,7 @@
             type="number"
             ref="rewindAfterPauseSeconds"
             v-bind:data-property="'options.rewindAfterPauseSeconds'"
-            @click="getInput('rewindAfterPauseSeconds', $event)"
+            @input="setValue($refs['rewindAfterPauseSeconds'], $event)"
             min="0"
             step="1"
             v-model="settings.options.rewindAfterPauseSeconds"
@@ -158,27 +159,34 @@ export default {
     document.addEventListener("keyup", this.registerInput);
   },
   methods: {
-    ...mapActions(["test"]),
+    ...mapActions(["updateSettings"]),
     closeModal: function() {
       this.$store.commit("closeModal");
+    },
+    setValue: function(ref, event) {
+      console.log(ref, event);
+      let { branch, leaf } = this.getBranchAndLeaf(ref);
+
+      this.updateSettings({
+        branch,
+        leaf,
+        value: event.target.value,
+      });
     },
     registerInput: function(event) {
       if (!this.isListeningForInput) return;
       console.log("registered:", event.code, event);
       this.refListening.value = event.code;
-      let splitProperty = this.refListening
-        .getAttribute("data-property")
-        .split(".");
-      let branch = splitProperty[0];
-      let leaf = splitProperty[1];
 
-      this.test({
+      let { branch, leaf } = this.getBranchAndLeaf(this.refListening);
+
+      this.updateSettings({
         branch,
         leaf,
         value: event.code,
       });
 
-      // clear leftovers
+      // clear after
       this.isListeningForInput = false;
       this.refListening = null;
     },
@@ -187,6 +195,10 @@ export default {
       console.log(ref, event);
       this.isListeningForInput = true;
       this.refListening = ref;
+    },
+    getBranchAndLeaf: function(domElement) {
+      let splitProperty = domElement.getAttribute("data-property").split(".");
+      return { branch: splitProperty[0], leaf: splitProperty[1] };
     },
   },
 };

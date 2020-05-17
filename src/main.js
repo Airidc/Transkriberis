@@ -37,7 +37,7 @@ const store = new Vuex.Store({
     openModal(state) {
       state.isModalOpen = true;
     },
-    updateKeyBinding(state, data) {
+    updateSettings(state, data) {
       console.log("state", state);
       if (data.branch === "keyBindings") {
         switch (data.leaf) {
@@ -90,10 +90,10 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    test: function(context, data) {
+    updateSettings: function(context, data) {
       // console.log("context", context);
       console.log("data:", data);
-      context.commit("updateKeyBinding", data);
+      context.commit("updateSettings", data);
       // console.log("is is working?", );
     },
   },
