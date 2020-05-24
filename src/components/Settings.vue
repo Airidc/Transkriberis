@@ -6,65 +6,45 @@
         <h3>Greitųjų mygtukų nustatymai</h3>
         <div class="input-group">
           <h4>Paleisti/Sustabdyti</h4>
-          <!-- <span @click="getInput('playPause', $event)">
-            {{ this.settings.keyBindings.playPause }}
-          </span> -->
           <input
             ref="playPause"
             type="text"
             readonly
             v-bind:data-property="'keyBindings.playPause'"
             @click="getInput($refs['playPause'], $event)"
-            style="/*display: none;*/"
             :value.prop="settings.keyBindings.playPause || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
           <h4>Atsukti atgal</h4>
-          <!-- <span @click="getInput(settings.keyBindings.rewind, $event)">
-            {{ settings.keyBindings.rewind }}
-          </span> -->
           <input
             ref="rewind"
             type="text"
             readonly
             v-bind:data-property="'keyBindings.rewind'"
             @click="getInput($refs['rewind'], $event)"
-            style="/*display: none;*/"
             :value.prop="settings.keyBindings.rewind || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
           <h4>Pasukti į priekį</h4>
-          <!-- <span @click="getInput(settings.keyBindings.forward, $event)">
-            {{ settings.keyBindings.forward }}
-          </span> -->
           <input
             ref="forward"
             type="text"
             readonly
             v-bind:data-property="'keyBindings.forward'"
             @click="getInput($refs['forward'], $event)"
-            style="/*display: none;*/"
             :value.prop="settings.keyBindings.forward || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
           <h4>Greitis +</h4>
-          <!-- <span
-            @click="
-              getInput(settings.keyBindings.playbackSpeedIncrease, $event)
-            "
-          >
-            {{ settings.keyBindings.playbackSpeedIncrease }}
-          </span> -->
           <input
             ref="playbackSpeedIncrease"
             type="text"
             readonly
             v-bind:data-property="'keyBindings.playbackSpeedIncrease'"
             @click="getInput($refs['playbackSpeedIncrease'], $event)"
-            style="/*display: none;*/"
             :value.prop="
               settings.keyBindings.playbackSpeedIncrease || 'Nera knopkės 🤷‍♂️🤷‍♀️'
             "
@@ -72,20 +52,12 @@
         </div>
         <div class="input-group">
           <h4>Greitis -</h4>
-          <!-- <span
-            @click="
-              getInput(settings.keyBindings.playbackSpeedDecrease, $event)
-            "
-          >
-            {{ settings.keyBindings.playbackSpeedDecrease }}
-          </span> -->
           <input
             ref="playbackSpeedDecrease"
             type="text"
             readonly
             v-bind:data-property="'keyBindings.playbackSpeedDecrease'"
             @click="getInput($refs['playbackSpeedDecrease'], $event)"
-            style="/*display: none;*/"
             :value.prop="
               settings.keyBindings.playbackSpeedDecrease || 'Nera knopkės 🤷‍♂️🤷‍♀️'
             "
@@ -96,39 +68,41 @@
         <h3>Grotuvo valdymo pasirinktys</h3>
         <div class="input-group">
           <h4>Persukimo kiekis (sekundės)</h4>
-          <!-- <span @click="getInput(settings.options.rewindSeconds, $event)">
-            {{ settings.options.rewindSeconds }}
-          </span> -->
           <input
             ref="rewindSeconds"
             type="number"
             v-bind:data-property="'options.rewindSeconds'"
             @input="setValue($refs['rewindSeconds'], $event)"
-            style="/*display: none;*/"
             v-model="settings.options.rewindSeconds"
           />
         </div>
         <div class="input-group">
           <h4>Pagreitinimas / sulėtinimas (žingsnis)</h4>
           <input
+            type="number"
             ref="playbackSpeedStep"
             v-bind:data-property="'options.playbackSpeedStep'"
             @input="setValue($refs['playbackSpeedStep'], $event)"
             v-model="settings.options.playbackSpeedStep"
           />
-          <!-- {{ settings.options.playbackSpeedStep }}
-          </span> -->
         </div>
         <div class="input-group">
           <h4>Atsukti laiką paleidžiant po pauzės?</h4>
-          <input
-            type="checkbox"
-            ref="rewindAfterPause"
-            v-bind:data-property="'options.rewindAfterPause'"
-            @input="setValue($refs['rewindAfterPause'], $event)"
-            name="rewindAfterPause"
-            :checked="settings.options.rewindAfterPause"
-          />
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              ref="rewindAfterPause"
+              v-bind:data-property="'options.rewindAfterPause'"
+              @input="setValue($refs['rewindAfterPause'], $event)"
+              name="rewindAfterPause"
+              style="opacity: 1;"
+              :checked="settings.options.rewindAfterPause"
+            />
+            <span
+              @click="handleCheckbox($refs['rewindAfterPause'])"
+              class="checkbox"
+            ></span>
+          </div>
         </div>
         <div class="input-group">
           <h4>Atsukti sekundžių po pauzės</h4>
@@ -153,6 +127,7 @@ export default {
   data() {
     return {
       isListeningForInput: false,
+      error: "",
     };
   },
   computed: {
@@ -162,18 +137,38 @@ export default {
     settings: function() {
       return this.$store.state.settings;
     },
+    keysBind: function() {
+      let usedKeys = [];
+      Object.keys(this.settings.keyBindings).forEach((key) => {
+        let keyBindingValue = this.settings.keyBindings[key];
+        console.log("naudojami raktai:", keyBindingValue);
+        if (!keyBindingValue) return;
+        usedKeys.push(keyBindingValue);
+      });
+
+      return usedKeys;
+    },
   },
   mounted() {
-    // if() - localstorage, then load if not define default
     document.addEventListener("keyup", this.registerInput);
   },
   methods: {
     ...mapActions(["updateSettings"]),
     closeModal: function() {
+      // clear after
+      this.isListeningForInput = false;
+      if (this.refListening) {
+        this.refListening.classList.remove("active");
+        this.refListening.classList.remove("error");
+        this.error = null;
+        this.refListening = null;
+      }
       this.$store.commit("closeModal");
     },
+    handleCheckbox: function(ref) {
+      ref.click();
+    },
     setValue: function(ref, event) {
-      console.log(ref, event);
       let { branch, leaf } = this.getBranchAndLeaf(ref);
       let value =
         event.target.type === "checkbox"
@@ -188,10 +183,21 @@ export default {
     },
     registerInput: function(event) {
       if (!this.isListeningForInput) return;
-      console.log("registered:", event.code, event);
+      if (this.keysBind.some((val) => val === event.code)) {
+        this.refListening.classList.add("error");
+        this.$toastr.e({ msg: "Mygtukas jau naudojamas!" });
+        return;
+      }
+
       this.refListening.value = event.code;
+      this.refListening.classList.remove("active");
 
       let { branch, leaf } = this.getBranchAndLeaf(this.refListening);
+
+      if (this.settings[branch][leaf] == event.code) {
+        this.isListeningForInput = false;
+        return;
+      }
 
       this.updateSettings({
         branch,
@@ -201,13 +207,22 @@ export default {
 
       // clear after
       this.isListeningForInput = false;
+      this.refListening.classList.remove("error");
+      this.error = null;
       this.refListening = null;
     },
     getInput: function(ref, event) {
-      // event.preventDefault();
-      console.log(ref, event);
+      event.preventDefault();
+      if (this.isListeningForInput) {
+        this.isListeningForInput = false;
+        this.refListening.classList.remove("active");
+        this.refListening.classList.remove("error");
+        this.error = null;
+        return;
+      }
       this.isListeningForInput = true;
       this.refListening = ref;
+      ref.classList.add("active");
     },
     getBranchAndLeaf: function(domElement) {
       let splitProperty = domElement.getAttribute("data-property").split(".");
@@ -220,7 +235,6 @@ export default {
 <style lang="scss" scoped>
 .settings {
   &-container {
-    // display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -243,20 +257,88 @@ export default {
   }
 
   &-section {
-    //max-width: 45%;
     .input-group {
       display: flex;
       justify-content: space-between;
       align-items: center;
 
-      span {
-        flex-grow: 1;
-        width: 50%;
-        background: #f8f8f8;
-        border: 1px solid #111111;
-        margin-left: 1em;
-        padding: 10px;
-        height: fit-content;
+      input[type="text"],
+      input[type="number"] {
+        width: 45%;
+        border-radius: 5px;
+        border: none;
+        padding: 8px;
+        background: #e8e8e8;
+        box-shadow: 7px 7px 10px #bcbcbc, -7px -7px 10px #ffffff;
+
+        &.active {
+          box-shadow: inset 5px 5px 8px #a2a2a2, inset -5px -5px 8px #ffffff;
+        }
+
+        &.error {
+          border: 1px solid red;
+        }
+      }
+
+      .checkbox-container {
+        align-content: center;
+        display: flex;
+        position: relative;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        .checkbox {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 36px;
+          height: 36px;
+          cursor: pointer;
+          background: #e8e8e8;
+          border-radius: 5px;
+          box-shadow: 5px 4px 10px #bcbcbc, -5px -4px 10px #ffffff;
+        }
+
+        input[type="checkbox"] {
+          // padding: 10px;
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0;
+        }
+
+        &:hover input[type="checkbox"] ~ .checkbox {
+          box-shadow: inset 5px 5px 8px #a2a2a2, inset -5px -5px 8px #ffffff;
+        }
+
+        .checkbox:after {
+          content: "";
+          position: absolute;
+          display: none;
+        }
+
+        input[type="checkbox"]:checked ~ .checkbox:after {
+          display: block;
+        }
+
+        .checkbox:after {
+          left: 14px;
+          top: 8px;
+          width: 7px;
+          height: 12px;
+          border: solid #a2a2a2;
+          border-width: 0 3px 3px 0;
+          -webkit-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+        }
       }
     }
   }

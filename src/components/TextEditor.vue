@@ -2,7 +2,13 @@
   <div class="text-container">
     <h2>Tekstas:</h2>
     <div class="text-area-containter">
-      <textarea name="text" id="text-area" cols="60" rows="25"></textarea>
+      <textarea
+        name="text"
+        id="text-area"
+        cols="60"
+        rows="25"
+        style="resize: none;"
+      ></textarea>
     </div>
   </div>
 </template>

@@ -1,31 +1,37 @@
 import Vue from "vue";
 import App from "./App.vue";
 // import "./registerServiceWorker";
+import VueToastr from "vue-toastr";
 
 Vue.config.productionTip = false;
 
 import Vuex from "vuex";
 
 Vue.use(Vuex);
+Vue.use(VueToastr, {
+  defaultTimeout: 3000,
+});
+
+let settings = JSON.parse(localStorage.getItem("userSettings")) || {
+  keyBindings: {
+    playPause: null,
+    rewind: null,
+    forward: null,
+    playbackSpeedIncrease: null,
+    playbackSpeedDecrease: null,
+  },
+  options: {
+    rewindSeconds: 1,
+    playbackSpeedStep: 0.25,
+    rewindAfterPause: true,
+    rewindAfterPauseSeconds: 1,
+  },
+};
 
 const store = new Vuex.Store({
   state: {
     isModalOpen: false,
-    settings: {
-      keyBindings: {
-        playPause: null,
-        rewind: null,
-        forward: null,
-        playbackSpeedIncrease: null,
-        playbackSpeedDecrease: null,
-      },
-      options: {
-        rewindSeconds: 1,
-        playbackSpeedStep: 0.25,
-        rewindAfterPause: true,
-        rewindAfterPauseSeconds: 0,
-      },
-    },
+    settings,
   },
   mutations: {
     changeModalState(state) {
@@ -38,7 +44,6 @@ const store = new Vuex.Store({
       state.isModalOpen = true;
     },
     updateSettings(state, data) {
-      console.log("state", state);
       if (data.branch === "keyBindings") {
         switch (data.leaf) {
           case "playPause":
@@ -88,15 +93,13 @@ const store = new Vuex.Store({
             break;
         }
       }
-      // getDeepValue(state, data.property, data.value);
+
+      localStorage.setItem("userSettings", JSON.stringify(state.settings));
     },
   },
   actions: {
     updateSettings: function(context, data) {
-      // console.log("context", context);
-      console.log("data:", data);
       context.commit("updateSettings", data);
-      // console.log("is is working?", );
     },
   },
 });

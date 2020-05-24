@@ -3,7 +3,6 @@
     <audio id="audioPlayer" @timeupdate="handleTimeUpdate">
       <source id="audioPlayerSource" />
     </audio>
-    <!-- <AudioControls></AudioControls> -->
     <div class="player">
       <div class="main-row">
         <span @click="handlePlayPause" class="audio-btn--clickable play-pause">
@@ -11,11 +10,20 @@
           <PauseIcon v-else></PauseIcon>
         </span>
         <div class="progress-bar-container">
-          <h4 v-if="audio.src" class="time">{{ currentPlayTime }}</h4>
-          <h4>{{ audio.name ? audio.name : "Niekas negroja 🙉" }}</h4>
-          <div @click="handleProgressbarClick" class="progres-bar--wrapper">
-            <span class="progress-bar" id="progress-bar"> </span>
-            <span class="progress-bar--background"> </span>
+          <div class="audio--text">
+            <h4 v-if="audio.src" class="time">{{ currentPlayTime }}</h4>
+            <h4>{{ audio.name ? audio.name : "Niekas negroja 🙉" }}</h4>
+          </div>
+          <div class="progress-bar--wrapper">
+            <input
+              type="range"
+              name="progress-bar"
+              min="0"
+              step="0.5"
+              @input="handleProgressbarClick"
+              id="progress-bar"
+              class="progress-slider progress-bar"
+            />
           </div>
         </div>
       </div>
@@ -73,7 +81,6 @@
 </template>
 
 <script>
-// import AudioControls from "./AudioControls";
 import Playlist from "./Playlist";
 import VolumeIcon from "../assets/icons/VolumeIcon";
 import VolumeMuteIcon from "../assets/icons/VolumeMuteIcon";
@@ -85,7 +92,6 @@ import PlusIcon from "../assets/icons/PlusIcon";
 
 export default {
   components: {
-    // AudioControls,
     VolumeIcon,
     VolumeMuteIcon,
     PlayIcon,
@@ -109,18 +115,12 @@ export default {
       audioPlayer: null,
       audioPlayerSource: null,
       progressBarElement: null,
-      progressBarWidth: 0,
-      isPlaying: false,
       isVolumeSliderVisible: false,
       isFileLoaded: false,
     };
   },
   computed: {
     currentPlayTime: function() {
-      if (!this.audio.duration || !this.audio.currentTime) {
-        return "--:--:--";
-      }
-
       return (
         this.convertSeconds(this.audio.currentTime) +
         " / " +
@@ -138,20 +138,16 @@ export default {
     this.audioPlayer = document.getElementById("audioPlayer");
     this.audioPlayerSource = document.getElementById("audioPlayerSource");
     this.progressBarElement = document.querySelector("#progress-bar");
-    this.audioPlayer.addEventListener("canplaythrough", this.addPlayTimeValues);
-    this.progressBarWidth = parseInt(
-      window
-        .getComputedStyle(document.querySelector(".progress-bar--background"))
-        .getPropertyValue("width")
-        .replace("px", "")
-    );
+    this.progressBarElement.value = 0;
+
+    this.audioPlayer.addEventListener("loadeddata", this.addPlayTimeValues);
     document.addEventListener("keyup", this.handleKeyUp);
   },
   methods: {
     addPlayTimeValues: function(event) {
-      // console.log(parseInt(event.target.duration));
-      this.audio.duration = parseInt(event.target.duration);
-      this.audio.currentTime = parseInt(event.target.currentTime);
+      this.audio.duration = parseInt(event.target.duration) || 0;
+      this.audio.currentTime = parseInt(event.target.currentTime) || 0;
+      this.progressBarElement.max = this.audio.duration;
     },
     handleAudioMount: function(event) {
       this.audio.isPlaying = false;
@@ -160,7 +156,6 @@ export default {
       this.audio.currentTime = null;
       this.audio.name = null;
       this.audio.src = null;
-      this.progressBarElement.style.width = "0px";
 
       this.audio.name = event.name;
       this.audio.src = event.src;
@@ -168,13 +163,17 @@ export default {
       this.audioPlayer.load();
     },
     handleTimeUpdate: function(event) {
-      // console.log(event);
-      this.audio.duration = parseInt(event.target.duration);
-      this.audio.currentTime = parseInt(event.target.currentTime);
+      let duration = event.target.duration;
+      let currentTime = event.target.currentTime;
+      if (duration === currentTime) {
+        this.audio.isPlaying = false;
+        this.audioPlayer.pause();
+      }
 
-      this.progressBarElement.style.width = `${(this.audio.currentTime /
-        this.audio.duration) *
-        100}%`;
+      this.audio.duration = parseInt(duration);
+      this.audio.currentTime = parseInt(currentTime);
+
+      this.progressBarElement.value = parseInt(currentTime);
     },
     handlePlayPause: function() {
       if (!this.audio.src) {
@@ -185,23 +184,22 @@ export default {
         //pause
         this.audioPlayer.pause();
       } else {
-        if (this.settings.options.rewindAfterPause) this.handleRewind();
+        if (this.settings.options.rewindAfterPause)
+          this.handleRewind(
+            false,
+            this.settings.options.rewindAfterPauseSeconds
+          );
         this.audioPlayer.play();
       }
 
       this.audio.isPlaying = !this.audio.isPlaying;
     },
-    handleProgressbarClick: function(event) {
+    handleProgressbarClick: function() {
       if (!this.audio.src) {
         return;
       }
 
-      let progression = event.offsetX / this.progressBarWidth;
-      this.progressBarElement.style.width = `${progression * 100}%`;
-
-      // console.log(event.offsetX, this.progressBarWidth);
-      this.audioPlayer.currentTime = this.audioPlayer.duration * progression;
-      // console.log(this.audioPlayer.duration, progression, clickedTime);
+      this.audioPlayer.currentTime = this.progressBarElement.value;
     },
     handleVolumeClick: function() {
       this.isVolumeSliderVisible = !this.isVolumeSliderVisible;
@@ -224,8 +222,6 @@ export default {
         amount = parseFloat(this.settings.options.rewindSeconds);
       }
 
-      console.log("amount", amount);
-
       if (
         isForward &&
         this.audioPlayer.duration - this.audioPlayer.currentTime >= amount
@@ -236,7 +232,6 @@ export default {
       }
     },
     handlePlaybackSpeed: function(isIncreased) {
-      // console.log("playback", isIncreased);
       let speedStep = parseFloat(this.settings.options.playbackSpeedStep);
       if (
         (isIncreased &&
@@ -246,7 +241,6 @@ export default {
           (this.audio.playbackSpeed === 0 ||
             this.audio.playbackSpeed - speedStep <= 0.01))
       ) {
-        console.log("returning");
         return;
       }
 
@@ -254,12 +248,6 @@ export default {
         ? this.audio.playbackSpeed + parseFloat(speedStep)
         : this.audio.playbackSpeed - speedStep;
 
-      console.log(
-        "this.audio.playbackSpeed :>> ",
-        this.audio.playbackSpeed,
-        "||",
-        speedStep
-      );
       this.audioPlayer.playbackRate = this.audio.playbackSpeed;
     },
     handleKeyUp: function(event) {
@@ -303,6 +291,10 @@ export default {
       }
     },
     convertSeconds: function(seconds) {
+      if (!seconds) {
+        return "00:00:00";
+      }
+
       let hours = Math.floor(seconds / 3600);
       hours >= 1 ? (seconds = seconds - hours * 3600) : (hours = 0);
 
@@ -366,35 +358,30 @@ export default {
 
   .progress-bar-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    position: relative;
-    width: 75%;
-    height: 26px;
-    margin-right: 2em;
+    flex-grow: 1;
+    margin: auto 1em;
+
+    h4 {
+      margin: 0.33em;
+    }
 
     .progress-bar {
-      position: absolute;
-      top: 1.75em;
-      left: 0;
       margin: auto auto;
-      width: 0%;
-      height: 8px;
-      z-index: 2;
-      background: #006b5a;
-      // transition: width 0.1s linear;
-      // background-color: #42b883;
+      width: 100%;
 
-      &--background {
-        position: absolute;
-        top: 1.75em;
-        left: 0;
-        width: 100%;
-        height: 8px;
-        z-index: 1;
-        background: #006b5a55;
+      &--wrapper {
+        width: 95%;
       }
     }
   }
+}
+
+.audio--text {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
 }
 
 .button-row {

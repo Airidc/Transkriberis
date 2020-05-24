@@ -4,12 +4,12 @@
       <h2>{{ !isPlaylistView ? "Failų įkėlimas" : "Grojaraštis" }}</h2>
       <span
         @click="handleViewClick"
-        class="audio-btn--clickable"
+        class="audio-btn--clickable toggle-btn"
         style="height: 40px; margin-left: 2.5em;"
       >
         {{ isPlaylistView ? "Įkelti failus" : "Rodyti grojaraštį" }}
       </span>
-      <span @click="openSettings" class="audio-btn--clickable settings-btn">
+      <span @click="openSettings" class="audio-btn--clickable">
         <GearIcon></GearIcon>
       </span>
     </div>
@@ -78,9 +78,6 @@ export default {
     imitateClickUpload() {
       document.querySelector("#upload-files").click();
     },
-    handleFileChange(event) {
-      console.log(event);
-    },
     handleMouseEnter(event) {
       event.preventDefault();
       let icon = event.target.querySelector("svg");
@@ -136,9 +133,7 @@ export default {
     handleDrop(event) {
       event.preventDefault();
       if (event.dataTransfer && event.dataTransfer.items) {
-        // Use DataTransferItemList interface to access the file(s)
         for (let i = 0; i < event.dataTransfer.items.length; i++) {
-          // If dropped items aren't files, reject them
           if (event.dataTransfer.items[i].kind === "file") {
             let file = event.dataTransfer.items[i].getAsFile();
             this.audioSources.push({
@@ -146,10 +141,10 @@ export default {
               name: file.name,
               isPlaying: false,
             });
+            this.$toastr.s(`Added file: ${file.name}`);
           }
         }
       } else {
-        // Use DataTransfer interface to access the file(s)
         for (let i = 0; i < event.target.files.length; i++) {
           let file = event.target.files[i];
           this.audioSources.push({
@@ -182,10 +177,14 @@ export default {
 
 .top {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   margin: auto auto;
   width: 90%;
+
+  h2 {
+    margin-right: auto;
+  }
 }
 
 .drop-zone {
@@ -204,8 +203,9 @@ export default {
   box-shadow: inset 7px 7px 10px #bcbcbc, inset -7px -7px 10px #ffffff;
 }
 
-.settings-btn {
+.toggle-btn {
   margin-left: auto;
+  width: 142px;
 }
 
 .file-list {
