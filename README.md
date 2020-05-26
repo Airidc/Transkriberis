@@ -1,24 +1,33 @@
-# transkriberis
+# Transkriberis
 
-## Project setup
-```
-npm install
-```
+## Projektas
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Paprastas, perdaug neoverengineer'intas audio playeris skirtas patogiai valdyti audio playerį transkribuojat.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Traskriberį galima rasti čia: https://airidc.github.io/Transkriberis/
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Nustatymai
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Galimi nustatymai:
+
+Knopkių bind'inimas:
+* Paleisti/Sustabdyti
+* Atsukti atgal
+* Pasukti į priekį
+* Pagreitinti
+* Sulėtinti
+
+Playerio pasirinktys:
+* Persukimo kiekis (sekundėmis)
+* Pagreitinimo / Sulėtinimo žingsnis
+* Ar atsukti laiką po sustabdymo?
+* Kiek laiko atsukti po sustabdymo
+
+Defaultiniai nustatymai:
+* Knopkių - neivienos
+* Persukimo kiekis - 1 sekundė
+* Pagreitinimo / sulėtinimo žingsnis - 0,25 karto
+* Ar atsukti laiką po pauzės? - Taip
+* Atsukti sekundžių po pauzės - 1 sekundė
+
+
