@@ -1,8 +1,6 @@
 # Transkriberis
 
-## Projektas
-
-Paprastas, perdaug neoverengineer'intas audio playeris skirtas patogiai valdyti audio playerį transkribuojat.
+Paprastas, perdaug neoverengineer'intas audio playeris skirtas patogiai valdyti audio playerį transkribuojant.
 
 Traskriberį galima rasti čia: https://airidc.github.io/Transkriberis/
 
