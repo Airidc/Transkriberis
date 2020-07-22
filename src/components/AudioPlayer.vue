@@ -12,7 +12,7 @@
         <div class="progress-bar-container">
           <div class="audio--text">
             <h4 v-if="audio.src" class="time">{{ currentPlayTime }}</h4>
-            <h4>{{ audio.name ? audio.name : "Niekas negroja 🙉" }}</h4>
+            <h4>{{ audio.name ? audio.name : "Nothing is playing 🙉" }}</h4>
           </div>
           <div class="progress-bar--wrapper">
             <input
@@ -50,12 +50,12 @@
         <span @click="handleRewind(false)" class="audio-btn--clickable">
           <RewindIcon class="flip"></RewindIcon>
           <span class="btn-text">
-            Atgal {{ this.settings.options.rewindSeconds }}sek.
+            Rewind {{ this.settings.options.rewindSeconds }}sec
           </span>
         </span>
         <span @click="handleRewind(true)" class="audio-btn--clickable">
           <span class="btn-text">
-            Pirmyn {{ this.settings.options.rewindSeconds }}sek.
+            Forward {{ this.settings.options.rewindSeconds }}sec
           </span>
           <RewindIcon></RewindIcon>
         </span>
@@ -64,7 +64,7 @@
             <MinusIcon class="flip inner-btn"></MinusIcon>
           </span>
           <span class="btn-text">
-            Greitis
+            Playback Speed
           </span>
           <span class="btn-text">
             x{{ parseFloat(audio.playbackSpeed).toFixed(2) }}
@@ -400,7 +400,6 @@ export default {
   padding: 0 0.5em;
 
   min-width: 36px;
-  width: 200px;
   min-height: 46px;
   border-radius: 5px;
   background: #e8e8e8;

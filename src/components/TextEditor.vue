@@ -1,6 +1,6 @@
 <template>
   <div class="text-container">
-    <h2>Tekstas:</h2>
+    <h2>Text:</h2>
     <div class="text-area-containter">
       <textarea
         name="text"

@@ -1,31 +1,31 @@
 # Transkriberis
 
-Paprastas, perdaug neoverengineer'intas audio playeris skirtas patogiai valdyti audio playerį transkribuojant.
+Simple, not over-engineered audio player taylored for transcribing.
+Transkriberis can be found here: https://airidc.github.io/Transkriberis/
 
-Traskriberį galima rasti čia: https://airidc.github.io/Transkriberis/
+### Settings
 
-### Nustatymai
+Possible settings:
 
-Galimi nustatymai:
+Button binding:
 
-Knopkių bind'inimas:
-* Paleisti/Sustabdyti
-* Atsukti atgal
-* Pasukti į priekį
-* Pagreitinti
-* Sulėtinti
+- Play/Pause
+- Rewind
+- Forward
+- Increase playback speed
+- Decrease playback speed
 
-Playerio pasirinktys:
-* Persukimo kiekis (sekundėmis)
-* Pagreitinimo / Sulėtinimo žingsnis
-* Ar atsukti laiką po sustabdymo?
-* Kiek laiko atsukti po sustabdymo
+Audio Player settings:
 
-Defaultiniai nustatymai:
-* Knopkių - neivienos
-* Persukimo kiekis - 1 sekundė
-* Pagreitinimo / sulėtinimo žingsnis - 0,25 karto
-* Ar atsukti laiką po pauzės? - Taip
-* Atsukti sekundžių po pauzės - 1 sekundė
+- Amount of seconds to rewind
+- Playback speed increase/decrease step
+- Should the time be rewinded after pause
+- What the amount should be
 
+Default settings:
 
+- Key bindings - none
+- Forward/rewind - 1 second
+- Playback increase/decrease step - 0,25
+- Rewind after pause? - Yes
+- Seconds to rewind after pause - 1 second

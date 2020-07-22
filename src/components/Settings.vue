@@ -3,42 +3,42 @@
     <div class="settings-content">
       <span class="settings-close" @click="closeModal">X</span>
       <div class="settings-section">
-        <h3>Greitųjų mygtukų nustatymai</h3>
+        <h3>Keyboard shortcut settings</h3>
         <div class="input-group">
-          <h4>Paleisti/Sustabdyti</h4>
+          <h4>Play/Pause</h4>
           <input
             ref="playPause"
             type="text"
             readonly
             v-bind:data-property="'keyBindings.playPause'"
             @click="getInput($refs['playPause'], $event)"
-            :value.prop="settings.keyBindings.playPause || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
+            :value.prop="settings.keyBindings.playPause || 'No Bindings 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
-          <h4>Atsukti atgal</h4>
+          <h4>Rewind</h4>
           <input
             ref="rewind"
             type="text"
             readonly
             v-bind:data-property="'keyBindings.rewind'"
             @click="getInput($refs['rewind'], $event)"
-            :value.prop="settings.keyBindings.rewind || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
+            :value.prop="settings.keyBindings.rewind || 'No Bindings 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
-          <h4>Pasukti į priekį</h4>
+          <h4>Forward</h4>
           <input
             ref="forward"
             type="text"
             readonly
             v-bind:data-property="'keyBindings.forward'"
             @click="getInput($refs['forward'], $event)"
-            :value.prop="settings.keyBindings.forward || 'Nera knopkės 🤷‍♂️🤷‍♀️'"
+            :value.prop="settings.keyBindings.forward || 'No Bindings 🤷‍♂️🤷‍♀️'"
           />
         </div>
         <div class="input-group">
-          <h4>Greitis +</h4>
+          <h4>Playback speed increase</h4>
           <input
             ref="playbackSpeedIncrease"
             type="text"
@@ -46,12 +46,12 @@
             v-bind:data-property="'keyBindings.playbackSpeedIncrease'"
             @click="getInput($refs['playbackSpeedIncrease'], $event)"
             :value.prop="
-              settings.keyBindings.playbackSpeedIncrease || 'Nera knopkės 🤷‍♂️🤷‍♀️'
+              settings.keyBindings.playbackSpeedIncrease || 'No Bindings 🤷‍♂️🤷‍♀️'
             "
           />
         </div>
         <div class="input-group">
-          <h4>Greitis -</h4>
+          <h4>Playback speed decrease</h4>
           <input
             ref="playbackSpeedDecrease"
             type="text"
@@ -59,15 +59,15 @@
             v-bind:data-property="'keyBindings.playbackSpeedDecrease'"
             @click="getInput($refs['playbackSpeedDecrease'], $event)"
             :value.prop="
-              settings.keyBindings.playbackSpeedDecrease || 'Nera knopkės 🤷‍♂️🤷‍♀️'
+              settings.keyBindings.playbackSpeedDecrease || 'No Bindings 🤷‍♂️🤷‍♀️'
             "
           />
         </div>
       </div>
       <div class="settings-section">
-        <h3>Grotuvo valdymo pasirinktys</h3>
+        <h3>Audio player settings</h3>
         <div class="input-group">
-          <h4>Persukimo kiekis (sekundės)</h4>
+          <h4>Rewind amount (seconds)</h4>
           <input
             ref="rewindSeconds"
             type="number"
@@ -77,7 +77,7 @@
           />
         </div>
         <div class="input-group">
-          <h4>Pagreitinimas / sulėtinimas (žingsnis)</h4>
+          <h4>Playback speed step</h4>
           <input
             type="number"
             ref="playbackSpeedStep"
@@ -87,7 +87,7 @@
           />
         </div>
         <div class="input-group">
-          <h4>Atsukti laiką paleidžiant po pauzės?</h4>
+          <h4>Rewind after pause?</h4>
           <div class="checkbox-container">
             <input
               type="checkbox"
@@ -105,7 +105,7 @@
           </div>
         </div>
         <div class="input-group">
-          <h4>Atsukti sekundžių po pauzės</h4>
+          <h4>Amount of seconds to rewind after pause</h4>
           <input
             type="number"
             ref="rewindAfterPauseSeconds"
@@ -141,7 +141,7 @@ export default {
       let usedKeys = [];
       Object.keys(this.settings.keyBindings).forEach((key) => {
         let keyBindingValue = this.settings.keyBindings[key];
-        console.log("naudojami raktai:", keyBindingValue);
+        // console.log("naudojami raktai:", keyBindingValue);
         if (!keyBindingValue) return;
         usedKeys.push(keyBindingValue);
       });
