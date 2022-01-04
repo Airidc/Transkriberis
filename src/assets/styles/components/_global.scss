@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  min-height: 100vh;
+  padding: 0;
+  width: 100%;
+  margin: 0px;
+}
+
+body,
+#root {
+  position: relative;
+  background-color: $background-site;
+  color: $text-main;
+  font-family: $font-base;
+  font-size: $font-size-base;
+  line-height: $line-height;
+
+  // @include background-pattern();
+
+  @media only screen and (min-width: 650px) {
+  }
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a,
+a:visited,
+a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+// UTILITIES
+
+.bolded {
+  font-weight: 600;
+}
+
+.hide-mobile {
+  display: none;
+}
