@@ -28,10 +28,7 @@
         </div>
       </div>
       <div class="button-row">
-        <span
-          @click="handleVolumeClick"
-          class="audio-btn--clickable volume-controls"
-        >
+        <span @click="handleVolumeClick" class="audio-btn--clickable volume-controls">
           <VolumeIcon v-if="!audio.isMuted"></VolumeIcon>
           <VolumeMuteIcon v-else></VolumeMuteIcon>
           <input
@@ -49,14 +46,10 @@
         </span>
         <span @click="handleRewind(false)" class="audio-btn--clickable">
           <RewindIcon class="flip"></RewindIcon>
-          <span class="btn-text">
-            Atgal {{ this.settings.options.rewindSeconds }}s
-          </span>
+          <span class="btn-text"> Atgal {{ this.settings.options.rewindSeconds }}s </span>
         </span>
         <span @click="handleRewind(true)" class="audio-btn--clickable">
-          <span class="btn-text">
-            Į priekį {{ this.settings.options.rewindSeconds }}s
-          </span>
+          <span class="btn-text"> Į priekį {{ this.settings.options.rewindSeconds }}s </span>
           <RewindIcon></RewindIcon>
         </span>
         <span class="audio-btn">
@@ -64,11 +57,9 @@
             <MinusIcon class="flip inner-btn"></MinusIcon>
           </span>
           <span class="btn-text">
-            Playback Speed
+            Grojimo sparta
           </span>
-          <span class="btn-text">
-            x{{ parseFloat(audio.playbackSpeed).toFixed(2) }}
-          </span>
+          <span class="btn-text"> x{{ parseFloat(audio.playbackSpeed).toFixed(2) }} </span>
           <span @click="handlePlaybackSpeed(true)">
             <PlusIcon class="inner-btn"></PlusIcon>
           </span>
@@ -121,11 +112,7 @@ export default {
   },
   computed: {
     currentPlayTime: function() {
-      return (
-        this.convertSeconds(this.audio.currentTime) +
-        " / " +
-        this.convertSeconds(this.audio.duration)
-      );
+      return this.convertSeconds(this.audio.currentTime) + " / " + this.convertSeconds(this.audio.duration);
     },
     isModalOpen: function() {
       return this.$store.state.isModalOpen;
@@ -185,10 +172,7 @@ export default {
         this.audioPlayer.pause();
       } else {
         if (this.settings.options.rewindAfterPause)
-          this.handleRewind(
-            false,
-            this.settings.options.rewindAfterPauseSeconds
-          );
+          this.handleRewind(false, this.settings.options.rewindAfterPauseSeconds);
         this.audioPlayer.play();
       }
 
@@ -222,10 +206,7 @@ export default {
         amount = parseFloat(this.settings.options.rewindSeconds);
       }
 
-      if (
-        isForward &&
-        this.audioPlayer.duration - this.audioPlayer.currentTime >= amount
-      ) {
+      if (isForward && this.audioPlayer.duration - this.audioPlayer.currentTime >= amount) {
         this.audioPlayer.currentTime = this.audioPlayer.currentTime + amount;
       } else if (!isForward && this.audioPlayer.currentTime >= amount) {
         this.audioPlayer.currentTime = this.audioPlayer.currentTime - amount;
@@ -234,12 +215,8 @@ export default {
     handlePlaybackSpeed: function(isIncreased) {
       let speedStep = parseFloat(this.settings.options.playbackSpeedStep);
       if (
-        (isIncreased &&
-          (this.audio.playbackSpeed === 3 ||
-            this.audio.playbackSpeed + speedStep >= 3.01)) ||
-        (!isIncreased &&
-          (this.audio.playbackSpeed === 0 ||
-            this.audio.playbackSpeed - speedStep <= 0.01))
+        (isIncreased && (this.audio.playbackSpeed === 3 || this.audio.playbackSpeed + speedStep >= 3.01)) ||
+        (!isIncreased && (this.audio.playbackSpeed === 0 || this.audio.playbackSpeed - speedStep <= 0.01))
       ) {
         return;
       }
@@ -255,24 +232,15 @@ export default {
         return;
       }
 
-      if (
-        this.settings.keyBindings.playPause &&
-        event.code === this.settings.keyBindings.playPause
-      ) {
+      if (this.settings.keyBindings.playPause && event.code === this.settings.keyBindings.playPause) {
         this.handlePlayPause();
       }
 
-      if (
-        this.settings.keyBindings.rewind &&
-        event.code === this.settings.keyBindings.rewind
-      ) {
+      if (this.settings.keyBindings.rewind && event.code === this.settings.keyBindings.rewind) {
         this.handleRewind(false);
       }
 
-      if (
-        this.settings.keyBindings.forward &&
-        event.code === this.settings.keyBindings.forward
-      ) {
+      if (this.settings.keyBindings.forward && event.code === this.settings.keyBindings.forward) {
         this.handleRewind(true);
       }
 
@@ -305,9 +273,7 @@ export default {
       minutes.toString().length == 1 ? (minutes = "0" + minutes) : void 0;
       seconds.toString().length == 1 ? (seconds = "0" + seconds) : void 0;
 
-      return `${hours === 0 ? "" : hours + ":"}${
-        minutes === 0 ? "00:" : minutes + ":"
-      }${seconds}`;
+      return `${hours === 0 ? "" : hours + ":"}${minutes === 0 ? "00:" : minutes + ":"}${seconds}`;
     },
   },
 };
