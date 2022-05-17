@@ -1,13 +1,13 @@
 <template>
   <div class="playlist">
     <div class="top">
-      <h2>{{ !isPlaylistView ? "File Upload" : "Playlist" }}</h2>
+      <h2>{{ !isPlaylistView ? "Failų įkėlimas" : "Grojaraštis" }}</h2>
       <span
         @click="handleViewClick"
         class="audio-btn--clickable toggle-btn"
         style="height: 40px; margin-left: 2.5em;"
       >
-        {{ isPlaylistView ? "Upload Files" : "Show Playlist" }}
+        {{ isPlaylistView ? "Įikelti failą" : "Rodyti grojaraštį" }}
       </span>
       <span @click="openSettings" class="audio-btn--clickable">
         <GearIcon></GearIcon>
@@ -36,9 +36,9 @@
       @dragleave="handleDragLeave"
       @click="imitateClickUpload"
     >
-      <h4>Drag and drop 🎵 file here!</h4>
+      <h4>Įtempk failą čia 🎵!</h4>
       <UploadIcon></UploadIcon>
-      <h4>Or press anywhere in this box to open file upload dialog!</h4>
+      <h4>Arba spausk betkur šiame laukelyje, kad atidarytum įkėlimo langą!</h4>
     </div>
     <input
       type="file"

@@ -1,6 +1,7 @@
 <template>
   <div class="text-container">
-    <h2>Text:</h2>
+    <h2>Tekstas:</h2>
+    <button class="btn" @click="clearTextArea">Išvalyti teksto lauką</button>
     <div class="text-area-containter">
       <textarea
         name="text"
@@ -8,17 +9,39 @@
         cols="60"
         rows="25"
         style="resize: none;"
+        :value="savedText"
+        @input="saveProgress"
       ></textarea>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      savedText: "",
+    };
+  },
+  mounted() {
+    this.savedText = localStorage.getItem("savedText") || "";
+  },
+  methods: {
+    saveProgress(event) {
+      console.log("change event:", event.srcElement.value);
+      localStorage.setItem("savedText", event.srcElement.value);
+    },
+    clearTextArea() {
+      this.savedText = "";
+      localStorage.setItem("savedText", event.srcElement.value);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .text-container {
+  position: relative;
   width: 45%;
   border-radius: 4px;
   background: linear-gradient(145deg, #f8f8f8, #d1d1d1);
@@ -33,5 +56,13 @@ export default {};
     background-color: #f8f8f8;
     box-shadow: inset 5px 5px 8px #a2a2a2, inset -5px -5px 8px #ffffff;
   }
+}
+
+.btn {
+  position: absolute;
+
+  padding: 0.2em;
+  top: 0.75em;
+  right: 0.75em;
 }
 </style>

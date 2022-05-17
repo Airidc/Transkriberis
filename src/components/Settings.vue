@@ -3,9 +3,9 @@
     <div class="settings-content">
       <span class="settings-close" @click="closeModal">X</span>
       <div class="settings-section">
-        <h3>Keyboard shortcut settings</h3>
+        <h3>Klaviatūros nustatymai</h3>
         <div class="input-group">
-          <h4>Play/Pause</h4>
+          <h4>Groti/Sustabdyti</h4>
           <input
             ref="playPause"
             type="text"
@@ -16,7 +16,7 @@
           />
         </div>
         <div class="input-group">
-          <h4>Rewind</h4>
+          <h4>Atsukti atgal</h4>
           <input
             ref="rewind"
             type="text"
@@ -27,7 +27,7 @@
           />
         </div>
         <div class="input-group">
-          <h4>Forward</h4>
+          <h4>Pasukti į priekį</h4>
           <input
             ref="forward"
             type="text"
@@ -38,7 +38,7 @@
           />
         </div>
         <div class="input-group">
-          <h4>Playback speed increase</h4>
+          <h4>Padidinti grojimo spartą</h4>
           <input
             ref="playbackSpeedIncrease"
             type="text"
@@ -51,7 +51,7 @@
           />
         </div>
         <div class="input-group">
-          <h4>Playback speed decrease</h4>
+          <h4>Sumažinti grojimo spartą</h4>
           <input
             ref="playbackSpeedDecrease"
             type="text"
@@ -65,9 +65,9 @@
         </div>
       </div>
       <div class="settings-section">
-        <h3>Audio player settings</h3>
+        <h3>Audio grotuvo nustatymai</h3>
         <div class="input-group">
-          <h4>Rewind amount (seconds)</h4>
+          <h4>Atsukimo kiekis (sekundėmis)</h4>
           <input
             ref="rewindSeconds"
             type="number"
@@ -77,7 +77,7 @@
           />
         </div>
         <div class="input-group">
-          <h4>Playback speed step</h4>
+          <h4>Atsukimo spartos žingsnis</h4>
           <input
             type="number"
             ref="playbackSpeedStep"
@@ -87,7 +87,7 @@
           />
         </div>
         <div class="input-group">
-          <h4>Rewind after pause?</h4>
+          <h4>Atsukti įrašą po sustabdymo?</h4>
           <div class="checkbox-container">
             <input
               type="checkbox"
@@ -105,7 +105,7 @@
           </div>
         </div>
         <div class="input-group">
-          <h4>Amount of seconds to rewind after pause</h4>
+          <h4>Sekundžių kiekis atsukimui po pauzės</h4>
           <input
             type="number"
             ref="rewindAfterPauseSeconds"

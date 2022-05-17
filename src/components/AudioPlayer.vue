@@ -12,7 +12,7 @@
         <div class="progress-bar-container">
           <div class="audio--text">
             <h4 v-if="audio.src" class="time">{{ currentPlayTime }}</h4>
-            <h4>{{ audio.name ? audio.name : "Nothing is playing 🙉" }}</h4>
+            <h4>{{ audio.name ? audio.name : "Niekas negroja 🙉" }}</h4>
           </div>
           <div class="progress-bar--wrapper">
             <input
@@ -50,12 +50,12 @@
         <span @click="handleRewind(false)" class="audio-btn--clickable">
           <RewindIcon class="flip"></RewindIcon>
           <span class="btn-text">
-            Rewind {{ this.settings.options.rewindSeconds }}sec
+            Atgal {{ this.settings.options.rewindSeconds }}s
           </span>
         </span>
         <span @click="handleRewind(true)" class="audio-btn--clickable">
           <span class="btn-text">
-            Forward {{ this.settings.options.rewindSeconds }}sec
+            Į priekį {{ this.settings.options.rewindSeconds }}s
           </span>
           <RewindIcon></RewindIcon>
         </span>
