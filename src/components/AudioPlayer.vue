@@ -281,6 +281,16 @@ export default {
 <style lang="scss">
 @import "@/assets/style/slider.scss";
 
+svg {
+  width: 24px;
+  height: 24px;
+}
+
+.audio-player {
+  width: 90%;
+  font-size: smaller;
+}
+
 .time {
   margin-right: 1em;
   width: 33%;
@@ -432,5 +442,17 @@ export default {
 
 .btn-text {
   padding: 0 0.5em;
+}
+
+@media (min-width: 1235px) {
+  .audio-player {
+    width: unset;
+    font-size: normal;
+  }
+
+  svg {
+    width: 36px;
+    height: 36px;
+  }
 }
 </style>

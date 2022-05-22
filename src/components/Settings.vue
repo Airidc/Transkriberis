@@ -141,7 +141,6 @@ export default {
       let usedKeys = [];
       Object.keys(this.settings.keyBindings).forEach((key) => {
         let keyBindingValue = this.settings.keyBindings[key];
-        // console.log("naudojami raktai:", keyBindingValue);
         if (!keyBindingValue) return;
         usedKeys.push(keyBindingValue);
       });

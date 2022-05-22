@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     saveProgress(event) {
-      console.log("change event:", event.srcElement.value);
       localStorage.setItem("savedText", event.srcElement.value);
     },
     clearTextArea() {
@@ -42,7 +41,7 @@ export default {
 <style lang="scss" scoped>
 .text-container {
   position: relative;
-  width: 45%;
+  width: 90%;
   border-radius: 4px;
   background: linear-gradient(145deg, #f8f8f8, #d1d1d1);
   box-shadow: 5px 5px 8px #a2a2a2, -5px -5px 8px #ffffff;
@@ -64,5 +63,11 @@ export default {
   padding: 0.2em;
   top: 0.75em;
   right: 0.75em;
+}
+
+@media (min-width: 1235px) {
+  .text-container {
+    width: 45%;
+  }
 }
 </style>
